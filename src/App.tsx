@@ -6,11 +6,11 @@ import {
   useWriteContract,
 } from "wagmi";
 import { bsc } from "wagmi/chains";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // @ts-ignore
 import contract from "./abi/StakingContractV3.json";
-import { Button, message, Upload } from "antd";
+import { Button, List, message, Typography, Upload } from "antd";
 import { config } from "./wagmi.ts";
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
   const { connectors, connect, status, error } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
+  const [list, setList] = useState<{ address: string; state: boolean }[]>([]);
 
   // 读取USDT decimals
 
@@ -37,10 +38,21 @@ function App() {
       });
       console.log(res);
       console.log(error);
+
       index++;
       await handlerContract(addressArr, index);
     } catch (e) {
       message.error(`${address} is error`);
+
+      list.map((item) =>
+        item.address === address ? { ...item, state: true } : item,
+      );
+      console.log(list);
+      setList((prevList) =>
+        prevList.map((item) =>
+          item.address === address ? { ...item, state: true } : item,
+        ),
+      );
       console.log(e);
     }
   };
@@ -58,6 +70,8 @@ function App() {
       const addressArr: string[] = content.split("\n");
 
       let index = 0;
+
+      setList(addressArr.map((item) => ({ address: item, state: false })));
       await handlerContract(addressArr, index);
     };
 
@@ -107,10 +121,20 @@ function App() {
         </Upload>
       </div>
 
-      <div>
-        <h2>Connect</h2>
-        <div>{status}</div>
-        <div>{error?.message}</div>
+      <div className="list">
+        <List
+          bordered
+          dataSource={list}
+          renderItem={(item) => {
+            return (
+              <List.Item>
+                <Typography.Text delete={item.state}>
+                  {item.address}
+                </Typography.Text>
+              </List.Item>
+            );
+          }}
+        ></List>
       </div>
     </>
   );
