@@ -38,7 +38,7 @@ function App() {
       console.log(res);
       console.log(error);
       index++;
-      //await handlerContract(addressArr, index);
+      await handlerContract(addressArr, index);
     } catch (e) {
       message.error(`${address} is error`);
       console.log(e);
