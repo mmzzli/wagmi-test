@@ -15,7 +15,7 @@ import { config } from "./wagmi.ts";
 
 function App() {
   const account = useAccount();
-  const { connectors, connect, status, error } = useConnect();
+  const { connectors, connect, error } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
   const [list, setList] = useState<{ address: string; state: boolean }[]>([]);
@@ -47,7 +47,6 @@ function App() {
       list.map((item) =>
         item.address === address ? { ...item, state: true } : item,
       );
-      console.log(list);
       setList((prevList) =>
         prevList.map((item) =>
           item.address === address ? { ...item, state: true } : item,
@@ -122,6 +121,7 @@ function App() {
       </div>
 
       <div className="list">
+        {JSON.stringify(list)}
         <List
           bordered
           dataSource={list}
