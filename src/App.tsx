@@ -10,7 +10,7 @@ import { useEffect } from "react";
 
 // @ts-ignore
 import contract from "./abi/StakingContractV3.json";
-import { Button, Upload } from "antd";
+import { Button, message, Upload } from "antd";
 import { config } from "./wagmi.ts";
 
 function App() {
@@ -40,6 +40,7 @@ function App() {
       index++;
       //await handlerContract(addressArr, index);
     } catch (e) {
+      message.error(`${address} is error`);
       console.log(e);
     }
   };
