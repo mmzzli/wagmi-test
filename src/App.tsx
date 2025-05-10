@@ -1,57 +1,44 @@
-import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useSwitchChain,
-  useWriteContract,
-} from "wagmi";
-import { bsc } from "wagmi/chains";
-import { useEffect, useState } from "react";
-
-// @ts-ignore
+import { http } from "wagmi";
+import { useState } from "react";
 import contract from "./abi/StakingContractV3.json";
-import { Button, List, message, Typography, Upload } from "antd";
-import { config } from "./wagmi.ts";
+import { Button, Input, List, message, Typography, Upload } from "antd";
+import { privateKeyToAccount } from "viem/accounts";
+import { createWalletClient } from "viem";
+import { bsc } from "wagmi/chains";
 
 function App() {
-  const account = useAccount();
-  const { connectors, connect, error } = useConnect();
-  const { disconnect } = useDisconnect();
-  const { switchChain } = useSwitchChain();
-  const [list, setList] = useState<{ address: string; state: boolean }[]>([]);
+  const [list, setList] = useState<
+    { address: string; state: boolean; hash: "" }[]
+  >([]);
+  const [privateValue, setPrivateValue] = useState("");
+  const [account, setAccount] = useState("");
 
-  // 读取USDT decimals
-
-  const { writeContractAsync } = useWriteContract({ config });
-
-  const handlerContract = async (addressArr: string[], index = 0) => {
+  const handlerContract = async (
+    addressArr: string[],
+    index = 0,
+    walletClient: any,
+  ) => {
     const address = addressArr[index];
     if (index >= addressArr.length) {
       return;
     }
     try {
-      const res = await writeContractAsync({
+      const hash = await walletClient.writeContract({
         address: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
         abi: contract.abi,
         functionName: "setBlacklist",
         args: [address, true],
       });
-      console.log(res);
-      console.log(error);
 
-      index++;
-      await handlerContract(addressArr, index);
-    } catch (e) {
-      message.error(`${address} is error`);
-
-      list.map((item) =>
-        item.address === address ? { ...item, state: true } : item,
-      );
       setList((prevList) =>
         prevList.map((item) =>
-          item.address === address ? { ...item, state: true } : item,
+          item.address === address ? { ...item, state: true, hash } : item,
         ),
       );
+      index++;
+      await handlerContract(addressArr, index, walletClient);
+    } catch (e) {
+      message.error(`${address} is error`);
       console.log(e);
     }
   };
@@ -59,6 +46,15 @@ function App() {
     console.log(info);
     // 读取文件
     console.log(info.file);
+
+    const walletClient = createWalletClient({
+      account: privateKeyToAccount(
+        privateValue.startsWith("0x") ? privateValue : `0x${privateValue}`,
+      ),
+      chain: bsc,
+      transport: http(),
+    });
+
     const file = info.file.originFileObj || info.file; // 兼容 antd Upload 和标准 File
 
     const reader = new FileReader();
@@ -70,72 +66,71 @@ function App() {
 
       let index = 0;
 
-      setList(addressArr.map((item) => ({ address: item, state: false })));
-      await handlerContract(addressArr, index);
+      setList(
+        addressArr.map((item) => ({ address: item, state: false, hash: "" })),
+      );
+      await handlerContract(addressArr, index, walletClient);
     };
 
     reader.readAsText(file);
-    //
-    // writeContract({
-    //   address: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
-    //   abi: contract.abi,
-    //   functionName: "setBlacklist",
-    //   args: ["", true],
-    // });
   };
-
-  useEffect(() => {
-    if (account.status === "disconnected") {
-      const injectedConnector = connectors.find((c) => c.name === "Injected");
-      if (injectedConnector) {
-        connect({ connector: injectedConnector });
-      }
-    }
-  }, [account.status, connect, connectors]);
-
-  useEffect(() => {
-    // 如果已连接但不是BSC链，切换到BSC
-    if (account.status === "connected" && account.chainId !== bsc.id) {
-      switchChain({ chainId: bsc.id });
-    }
-  }, [account.status, account.chainId, switchChain]);
 
   return (
     <>
-      <div>
-        {account.status === "connected" && (
-          <button type="button" onClick={() => disconnect()}>
-            Disconnect
-          </button>
-        )}
+      <div style={{ marginBottom: "20px", textAlign: "center" }}>
+        <h2>Set black</h2>
+        {account && <p>Address: {account}</p>}
       </div>
 
-      <div>
-        <Upload
-          onChange={handlerClick}
-          showUploadList={false}
-          beforeUpload={() => false}
-        >
-          <Button>Upload</Button>
-        </Upload>
-      </div>
-
-      <div className="list">
-        {JSON.stringify(list)}
-        <List
-          bordered
-          dataSource={list}
-          renderItem={(item) => {
-            return (
-              <List.Item>
-                <Typography.Text delete={item.state}>
-                  {item.address}
-                </Typography.Text>
-              </List.Item>
-            );
+      {!account && (
+        <Input
+          value={privateValue}
+          placeholder="Please input private key"
+          onInput={(e: any) => {
+            const value = e.target?.value;
+            setPrivateValue(value);
+            if (value) {
+              const { address } = privateKeyToAccount(
+                value.startsWith("0x") ? value : `0x${value}`,
+              );
+              setAccount(address);
+            }
           }}
-        ></List>
-      </div>
+        ></Input>
+      )}
+
+      {account && (
+        <>
+          <div style={{ marginBottom: "20px" }}>
+            <Upload
+              onChange={handlerClick}
+              showUploadList={false}
+              beforeUpload={() => false}
+            >
+              <Button block={true} style={{ width: "100%" }}>
+                Upload
+              </Button>
+            </Upload>
+          </div>
+
+          <div className="list">
+            <List
+              bordered
+              dataSource={list}
+              renderItem={(item) => {
+                return (
+                  <List.Item style={{ background: item.state ? "#eee" : "" }}>
+                    <div>
+                      <Typography.Text>{item.address}</Typography.Text>
+                    </div>
+                    {item.hash && <p>hash:{item.hash}</p>}
+                  </List.Item>
+                );
+              }}
+            ></List>
+          </div>
+        </>
+      )}
     </>
   );
 }
