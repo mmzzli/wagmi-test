@@ -1,18 +1,54 @@
 import { http } from "wagmi";
-import { useState } from "react";
-import contract from "./abi/StakingContractV3.json";
-import { Button, Input, List, message, Typography, Upload } from "antd";
+import { useMemo, useState } from "react";
+import contractV3 from "./abi/StakingContractV3.json";
+import contractV2 from "./abi/StakingContractV2.json";
+import { Button, Input, List, message, Tabs, Typography, Upload } from "antd";
 import { privateKeyToAccount } from "viem/accounts";
 import { createWalletClient } from "viem";
-// import { bsc } from "wagmi/chains";
 import { bsc } from "./chains/bsc.ts";
+
+const map: any[] = [
+  {
+    key: "V3black",
+    label: "V3 拉黑",
+    contract: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
+    abi: contractV3.abi,
+    params: true,
+  },
+  {
+    key: "V3white",
+    label: "V3 解除拉黑",
+    contract: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
+    abi: contractV3.abi,
+    params: false,
+  },
+  {
+    key: "V2black",
+    label: "V2 拉黑",
+    contract: "0xc521983923625E14D0a45a7cDeA9C384fA1DEF13",
+    abi: contractV2.abi,
+    params: true,
+  },
+  {
+    key: "V2white",
+    label: "V2 解除拉黑",
+    contract: "0xc521983923625E14D0a45a7cDeA9C384fA1DEF13",
+    abi: contractV2.abi,
+    params: false,
+  },
+];
 
 function App() {
   const [list, setList] = useState<
     { address: string; state: number; hash: "" }[]
   >([]);
+  const [active, setActive] = useState(map[0].key);
   const [privateValue, setPrivateValue] = useState("");
   const [account, setAccount] = useState("");
+
+  const currentContract = useMemo(() => {
+    return map.find((item) => item.key === active);
+  }, [active]);
 
   const handlerContract = async (
     addressArr: string[],
@@ -24,12 +60,11 @@ function App() {
       return;
     }
     try {
-      console.log(address, "---------");
       const hash = await walletClient.writeContract({
-        address: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
-        abi: contract.abi,
+        address: currentContract.contract,
+        abi: currentContract.abi,
         functionName: "setBlacklist",
-        args: [address, true],
+        args: [address, currentContract.params],
       });
 
       setList((prevList) =>
@@ -110,8 +145,21 @@ function App() {
     reader.readAsText(file);
   };
 
+  const onChange = (key: string) => {
+    setActive(key);
+    setPrivateValue("");
+    setAccount("");
+    setList([]);
+  };
+
   return (
     <>
+      <Tabs
+        centered
+        defaultActiveKey={active}
+        items={map}
+        onChange={onChange}
+      ></Tabs>
       <div style={{ marginBottom: "20px", textAlign: "center" }}>
         <h2>Set black</h2>
         {account && <p>Address: {account}</p>}
