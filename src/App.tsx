@@ -50,6 +50,25 @@ function App() {
       console.log(e);
     }
   };
+
+  const handlerRetry = async (address: string) => {
+    const index = list.findIndex((item) => item.address === address);
+    const privateKey = privateValue.startsWith("0x")
+      ? privateValue
+      : `0x${privateValue}`;
+    const account = privateKeyToAccount(privateKey as any);
+
+    const walletClient = createWalletClient({
+      account,
+      chain: bsc,
+      transport: http(),
+    });
+    await handlerContract(
+      list.map((item) => item.address),
+      index,
+      walletClient,
+    );
+  };
   const handlerClick = (info: any) => {
     console.log(info);
     // 读取文件
@@ -73,7 +92,11 @@ function App() {
     reader.onload = async (e) => {
       const content: string = e.target?.result as string;
       console.log("文件内容：", content);
-      const addressArr: string[] = content.split("\n");
+      let addressArr: string[] = content.split("\n");
+
+      // 去重
+      addressArr = Array.from(new Set(addressArr));
+      addressArr = addressArr.filter((item) => item !== "");
 
       let index = 0;
 
@@ -146,6 +169,12 @@ function App() {
                       <Typography.Text>{item.address}</Typography.Text>
                     </div>
                     {item.hash && <p>hash:{item.hash}</p>}
+
+                    {item.state == 3 && (
+                      <Button onClick={() => handlerRetry(item.address)}>
+                        重试
+                      </Button>
+                    )}
                   </List.Item>
                 );
               }}
