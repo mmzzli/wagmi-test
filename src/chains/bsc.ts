@@ -11,6 +11,7 @@ export const bsc = /*#__PURE__*/ defineChain({
   rpcUrls: {
     default: {
       http: [
+        "https://bsc.blockpi.network/v1/rpc/cb875e94899d9a9114a3ddd4a2b624215d407ab7",
         "https://56.rpc.thirdweb.com",
         "https://go.getblock.io/bc841869c5bc477b8c57802853f6698a",
       ],
