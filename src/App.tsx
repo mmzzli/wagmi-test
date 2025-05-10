@@ -8,7 +8,7 @@ import { bsc } from "./chains/bsc.ts";
 
 function App() {
   const [list, setList] = useState<
-    { address: string; state: boolean; hash: "" }[]
+    { address: string; state: number; hash: "" }[]
   >([]);
   const [privateValue, setPrivateValue] = useState("");
   const [account, setAccount] = useState("");
@@ -23,6 +23,7 @@ function App() {
       return;
     }
     try {
+      console.log(address, "---------");
       const hash = await walletClient.writeContract({
         address: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
         abi: contract.abi,
@@ -32,12 +33,17 @@ function App() {
 
       setList((prevList) =>
         prevList.map((item) =>
-          item.address === address ? { ...item, state: true, hash } : item,
+          item.address === address ? { ...item, state: 2, hash: "" } : item,
         ),
       );
       index++;
       await handlerContract(addressArr, index, walletClient);
     } catch (e) {
+      setList((prevList) =>
+        prevList.map((item) =>
+          item.address === address ? { ...item, state: 3, hash: "" } : item,
+        ),
+      );
       message.error(`${address} is error`);
       console.log(e);
     }
@@ -47,10 +53,13 @@ function App() {
     // 读取文件
     console.log(info.file);
 
+    const privateKey = privateValue.startsWith("0x")
+      ? privateValue
+      : `0x${privateValue}`;
+    const account = privateKeyToAccount(privateKey as any);
+
     const walletClient = createWalletClient({
-      account: privateKeyToAccount(
-        privateValue.startsWith("0x") ? privateValue : `0x${privateValue}`,
-      ),
+      account,
       chain: bsc,
       transport: http(),
     });
@@ -67,7 +76,7 @@ function App() {
       let index = 0;
 
       setList(
-        addressArr.map((item) => ({ address: item, state: false, hash: "" })),
+        addressArr.map((item) => ({ address: item, state: 1, hash: "" })),
       );
       await handlerContract(addressArr, index, walletClient);
     };
@@ -119,7 +128,18 @@ function App() {
               dataSource={list}
               renderItem={(item) => {
                 return (
-                  <List.Item style={{ background: item.state ? "#eee" : "" }}>
+                  <List.Item
+                    style={{
+                      background:
+                        item.state == 1
+                          ? ""
+                          : item.state == 2
+                            ? "rgb(183,244,143)"
+                            : item.state === 3
+                              ? "rgb(255,204,199)"
+                              : "",
+                    }}
+                  >
                     <div>
                       <Typography.Text>{item.address}</Typography.Text>
                     </div>
