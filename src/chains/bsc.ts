@@ -10,7 +10,10 @@ export const bsc = /*#__PURE__*/ defineChain({
   },
   rpcUrls: {
     default: {
-      http: ["https://go.getblock.io/bc841869c5bc477b8c57802853f6698a"],
+      http: [
+        "https://56.rpc.thirdweb.com",
+        "https://go.getblock.io/bc841869c5bc477b8c57802853f6698a",
+      ],
     },
   },
   blockExplorers: {

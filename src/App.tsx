@@ -4,8 +4,8 @@ import contract from "./abi/StakingContractV3.json";
 import { Button, Input, List, message, Typography, Upload } from "antd";
 import { privateKeyToAccount } from "viem/accounts";
 import { createWalletClient } from "viem";
-import { bsc } from "wagmi/chains";
-// import { bsc } from "./chains/bsc.ts";
+// import { bsc } from "wagmi/chains";
+import { bsc } from "./chains/bsc.ts";
 
 function App() {
   const [list, setList] = useState<
