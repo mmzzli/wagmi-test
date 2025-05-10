@@ -37,7 +37,9 @@ function App() {
         ),
       );
       index++;
-      await handlerContract(addressArr, index, walletClient);
+      setTimeout(async () => {
+        await handlerContract(addressArr, index, walletClient);
+      }, 1000);
     } catch (e) {
       setList((prevList) =>
         prevList.map((item) =>
