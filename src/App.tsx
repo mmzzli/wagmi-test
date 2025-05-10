@@ -12,7 +12,6 @@ import { useEffect } from "react";
 import contract from "./abi/StakingContractV3.json";
 import { Button, Upload } from "antd";
 import { config } from "./wagmi.ts";
-import { useWriteContracts } from "wagmi/experimental";
 
 function App() {
   const account = useAccount();
