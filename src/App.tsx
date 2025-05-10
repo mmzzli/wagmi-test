@@ -33,7 +33,7 @@ function App() {
 
       setList((prevList) =>
         prevList.map((item) =>
-          item.address === address ? { ...item, state: 2, hash: "" } : item,
+          item.address === address ? { ...item, state: 2, hash } : item,
         ),
       );
       index++;
