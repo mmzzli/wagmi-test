@@ -29,7 +29,7 @@ const map: any[] = [
 
 function View() {
   const [list, setList] = useState<
-    { address: string; state: number; isBlack: boolean }[]
+    { address: string; state: number; isBlack: number }[]
   >([]);
   const [active, setActive] = useState(map[0].key);
 
@@ -53,18 +53,18 @@ function View() {
       setList((prevList) =>
         prevList.map((item) =>
           item.address === address
-            ? { ...item, state: 2, isBlack: !!res }
+            ? { ...item, state: 2, isBlack: res ? 2 : 3 }
             : item,
         ),
       );
       index++;
-      // setTimeout(async () => {
-      //   await handlerContract(addressArr, index);
-      // }, 1000);
+      setTimeout(async () => {
+        await handlerContract(addressArr, index);
+      }, 1000);
     } catch (e) {
       setList((prevList) =>
         prevList.map((item) =>
-          item.address === address ? { ...item, state: 3, hash: "" } : item,
+          item.address === address ? { ...item, state: 3, isBlack: 3 } : item,
         ),
       );
       message.error(`${address} is error`);
@@ -92,12 +92,29 @@ function View() {
       let index = 0;
 
       setList(
-        addressArr.map((item) => ({ address: item, state: 1, isBlack: false })),
+        addressArr.map((item) => ({ address: item, state: 1, isBlack: 0 })),
       );
       await handlerContract(addressArr, index);
     };
 
     reader.readAsText(file);
+  };
+
+  const handlerRetry = async (address: string) => {
+    const res = await publicClient.readContract({
+      address: currentContract.contract,
+      abi: currentContract.abi,
+      functionName: currentContract.func,
+      args: [address],
+    });
+
+    setList((prevList) =>
+      prevList.map((item) =>
+        item.address === address
+          ? { ...item, state: 2, isBlack: res ? 2 : 3 }
+          : item,
+      ),
+    );
   };
 
   const onChange = (key: string) => {
@@ -140,14 +157,21 @@ function View() {
                   <List.Item
                     style={{
                       background:
-                        item.isBlack === true
+                        item.isBlack === 2
                           ? "rgb(183,244,143)"
-                          : "rgb(255,204,199)",
+                          : item.isBlack === 3
+                            ? "rgb(255,204,199)"
+                            : "",
                     }}
                   >
                     <div>
                       <Typography.Text>{item.address}</Typography.Text>
                     </div>
+                    {item.state == 3 && (
+                      <Button onClick={() => handlerRetry(item.address)}>
+                        重试
+                      </Button>
+                    )}
                   </List.Item>
                 );
               }}
