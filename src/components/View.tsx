@@ -167,9 +167,9 @@ function View() {
                     <div>
                       <Typography.Text>{item.address}</Typography.Text>
                     </div>
-                    {item.state == 3 && (
+                    {item.isBlack == 3 && (
                       <Button onClick={() => handlerRetry(item.address)}>
-                        重试
+                        重试获取状态
                       </Button>
                     )}
                   </List.Item>
