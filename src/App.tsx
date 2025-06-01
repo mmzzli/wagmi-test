@@ -2,8 +2,13 @@ import Controls from "./components/Controls.tsx";
 import { useState } from "react";
 import { Tabs } from "antd";
 import View from "./components/View.tsx";
+import Home from "./components/Home.tsx";
 
 const tabs: any[] = [
+  {
+    key: "home",
+    label: "拉黑程序",
+  },
   {
     key: "controls",
     label: "拉黑/解除拉黑",
@@ -26,6 +31,7 @@ const App = () => {
           setActive(key);
         }}
       ></Tabs>
+      {active === "home" && <Home />}
       {active === "controls" && <Controls></Controls>}
       {active === "view" && <View></View>}
     </>
