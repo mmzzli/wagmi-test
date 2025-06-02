@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getList } from "../service/black.ts";
-import { List, Typography } from "antd";
+import HomeCommonList from "./HomeCommonList.tsx";
 const time = 5;
 
 const HomeBlackList = () => {
@@ -35,39 +35,7 @@ const HomeBlackList = () => {
     <>
       <div>仅展示最新 30条内容</div>
       <span>当前块高{blockNumber}</span>
-      <div>
-        <List
-          bordered
-          dataSource={list}
-          renderItem={(item) => {
-            return (
-              <List.Item
-                style={{
-                  background:
-                    item.blacked == 1 ? "rgb(255,204,199)" : "rgb(183,244,143)",
-                }}
-                actions={[
-                  item.hash ? (
-                    <a
-                      target="_blank"
-                      href={`https://bscscan.com/tx/${item.hash}`}
-                    >
-                      {`https://bscscan.com/tx/${item.hash}`}
-                    </a>
-                  ) : (
-                    <span>外部拉黑</span>
-                  ),
-                ]}
-              >
-                <div>
-                  <Typography.Text>{item.address}</Typography.Text>
-                  <div>{item.blacked ? "已拉黑" : "未拉黑"}</div>
-                </div>
-              </List.Item>
-            );
-          }}
-        ></List>
-      </div>
+      <HomeCommonList list={list}></HomeCommonList>
     </>
   );
 };

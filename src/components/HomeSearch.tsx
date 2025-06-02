@@ -1,6 +1,7 @@
-import { Input, List, Typography } from "antd";
+import { Input } from "antd";
 import { useState } from "react";
 import { searchBlack } from "../service/black";
+import HomeCommonList from "./HomeCommonList.tsx";
 
 let timer: any = null;
 
@@ -38,38 +39,7 @@ const HomeSearch = () => {
         }}
       ></Input>
 
-      <List
-        style={{ marginTop: "20px" }}
-        bordered
-        dataSource={list}
-        renderItem={(item) => {
-          return (
-            <List.Item
-              style={{
-                background:
-                  item.blacked == 1 ? "rgb(255,204,199)" : "rgb(183,244,143)",
-              }}
-              actions={[
-                item.hash ? (
-                  <a
-                    target="_blank"
-                    href={`https://bscscan.com/tx/${item.hash}`}
-                  >
-                    {`https://bscscan.com/tx/${item.hash}`}
-                  </a>
-                ) : (
-                  <span>外部拉黑</span>
-                ),
-              ]}
-            >
-              <div>
-                <Typography.Text>{item.address}</Typography.Text>
-                <div>{item.blacked ? "已拉黑" : "未拉黑"}</div>
-              </div>
-            </List.Item>
-          );
-        }}
-      ></List>
+      <HomeCommonList list={list}></HomeCommonList>
     </>
   );
 };
