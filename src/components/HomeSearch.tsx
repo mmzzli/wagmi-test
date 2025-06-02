@@ -10,7 +10,7 @@ const HomeSearch = () => {
 
   return (
     <>
-      <h2>搜索拦黑地址</h2>
+      <h2>搜索拉黑地址</h2>
       <Input
         value={value}
         allowClear
@@ -45,19 +45,26 @@ const HomeSearch = () => {
         renderItem={(item) => {
           return (
             <List.Item
+              style={{
+                background:
+                  item.blacked == 1 ? "rgb(255,204,199)" : "rgb(183,244,143)",
+              }}
               actions={[
-                item.hash && (
+                item.hash ? (
                   <a
                     target="_blank"
                     href={`https://bscscan.com/tx/${item.hash}`}
                   >
-                    查看交易信息
+                    {`https://bscscan.com/tx/${item.hash}`}
                   </a>
+                ) : (
+                  <span>外部拉黑</span>
                 ),
               ]}
             >
               <div>
                 <Typography.Text>{item.address}</Typography.Text>
+                <div>{item.blacked ? "已拉黑" : "未拉黑"}</div>
               </div>
             </List.Item>
           );

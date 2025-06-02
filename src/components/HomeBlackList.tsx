@@ -33,7 +33,7 @@ const HomeBlackList = () => {
   }, []);
   return (
     <>
-      <div>还有{number}s 刷新</div>
+      <div>仅展示最新 30条内容</div>
       <span>当前块高{blockNumber}</span>
       <div>
         <List
@@ -42,19 +42,26 @@ const HomeBlackList = () => {
           renderItem={(item) => {
             return (
               <List.Item
+                style={{
+                  background:
+                    item.blacked == 1 ? "rgb(255,204,199)" : "rgb(183,244,143)",
+                }}
                 actions={[
-                  item.hash && (
+                  item.hash ? (
                     <a
                       target="_blank"
                       href={`https://bscscan.com/tx/${item.hash}`}
                     >
-                      查看交易信息
+                      {`https://bscscan.com/tx/${item.hash}`}
                     </a>
+                  ) : (
+                    <span>外部拉黑</span>
                   ),
                 ]}
               >
                 <div>
                   <Typography.Text>{item.address}</Typography.Text>
+                  <div>{item.blacked ? "已拉黑" : "未拉黑"}</div>
                 </div>
               </List.Item>
             );
