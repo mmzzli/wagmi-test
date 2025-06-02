@@ -5,7 +5,7 @@ const time = 5;
 
 const HomeBlackList = () => {
   // 定时查看拉黑情况
-  const [number, setNumber] = useState(time);
+  const [, setNumber] = useState(time);
   const [list, setList] = useState<any[]>([]);
   const [blockNumber, setBlockNumber] = useState(0);
   useEffect(() => {
