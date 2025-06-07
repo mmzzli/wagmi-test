@@ -16,9 +16,9 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
             <div style={{ width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography.Text>{item.address}</Typography.Text>
-                <div>已拉黑</div>
+                <div>{item.blacked ? "已拉黑" : "未拉黑"}</div>
                 <div>
-                  {item.black_hash ? (
+                  {item.blacked && item.black_hash ? (
                     <a
                       target="_blank"
                       href={`https://bscscan.com/tx/${item.black_hash}`}
