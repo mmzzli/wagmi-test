@@ -1,9 +1,16 @@
 import { Input } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { searchBlack } from "../service/black";
 import HomeCommonList from "./HomeCommonList.tsx";
 import contractV3 from "../abi/StakingContractV3.json";
-import { useReadContract } from "wagmi";
+import { http } from "wagmi";
+import { createPublicClient } from "viem";
+import { bsc } from "../chains/bsc.ts";
+
+const walletClient = createPublicClient({
+  chain: bsc,
+  transport: http(),
+});
 
 let timer: any = null;
 const contractMap = {
@@ -13,27 +20,6 @@ const contractMap = {
 const HomeSearch = () => {
   const [value, setValue] = useState("");
   const [list, setList] = useState<any[]>([]);
-
-  const { data: isBlacklisted } = useReadContract({
-    address: contractMap.contract as any,
-    abi: contractMap.abi,
-    functionName: "isInBlacklist",
-    args: [value],
-  });
-
-  useEffect(() => {
-    if (list.length) {
-      if (!list[0].hash) {
-        // Update list with blacklist status
-        setList((prevList) =>
-          prevList.map((item) => ({
-            ...item,
-            isBlacklisted: isBlacklisted,
-          })),
-        );
-      }
-    }
-  }, [list, isBlacklisted]);
 
   return (
     <>
@@ -57,7 +43,30 @@ const HomeSearch = () => {
             timer = setTimeout(async () => {
               console.log(value);
               const res = await searchBlack(value);
-              setList(res.data);
+
+              // 查询合约
+              if (res.data.length && !res.data[0].blacked) {
+                try {
+                  const contractRes = await walletClient.readContract({
+                    address: contractMap.contract as any,
+                    abi: contractMap.abi,
+                    functionName: "isInBlacklist",
+                    args: [value],
+                  });
+                  console.log(contractRes);
+                  // 更新数据
+                  const newData = res.data;
+                  if (newData[0]) {
+                    newData[0] = { ...newData[0], outBlacked: contractRes };
+                  }
+                  setList(newData);
+                } catch (err) {
+                  console.log(err);
+                  setList(res.data);
+                }
+              } else {
+                setList(res.data);
+              }
             }, 500);
           } else {
             setList([]);

@@ -16,17 +16,23 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
             <div style={{ width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography.Text>{item.address}</Typography.Text>
-                <div>{item.blacked ? "已拉黑" : "未拉黑"}</div>
+                {/*{item.blacked 为 true 是显示拉黑，但如果 item.black_hash 没有值则为外部拉黑}*/}
                 <div>
-                  {item.blacked && item.black_hash ? (
-                    <a
-                      target="_blank"
-                      href={`https://bscscan.com/tx/${item.black_hash}`}
-                    >
-                      {`https://bscscan.com/tx/${item.black_hash}`}
-                    </a>
-                  ) : (
+                  {item.blacked ? (
+                    item.black_hash ? (
+                      <a
+                        target="_blank"
+                        href={`https://bscscan.com/tx/${item.black_hash}`}
+                      >
+                        {`https://bscscan.com/tx/${item.black_hash}`}
+                      </a>
+                    ) : (
+                      <span>外部拉黑</span>
+                    )
+                  ) : item.outBlacked ? (
                     <span>外部拉黑</span>
+                  ) : (
+                    <span>未拉黑</span>
                   )}
                 </div>
               </div>
