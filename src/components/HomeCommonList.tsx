@@ -72,7 +72,6 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                 <span>to</span> <span>{item.to_address}</span>
               </div>
               <div
-                className={"list-style"}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -83,7 +82,6 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
               </div>
 
               <div
-                className={"list-style"}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
