@@ -13,14 +13,14 @@ const publicClient = createPublicClient({
 const map: any[] = [
   {
     key: "V3black",
-    label: "V3查看",
+    label: "V3 View",
     contract: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
     abi: contractV3.abi,
     func: "isInBlacklist",
   },
   {
     key: "V2black",
-    label: "V2查看",
+    label: "V2 View",
     contract: "0xc521983923625E14D0a45a7cDeA9C384fA1DEF13",
     abi: contractV2.abi,
     func: "isInBlacklist",
@@ -169,7 +169,7 @@ function View() {
                     </div>
                     {item.isBlack == 3 && (
                       <Button onClick={() => handlerRetry(item.address)}>
-                        重试获取状态
+                        Retry Status Check
                       </Button>
                     )}
                   </List.Item>

@@ -23,7 +23,7 @@ const HomeSearch = () => {
 
   return (
     <>
-      <h2>搜索拉黑地址</h2>
+      <h2>Search Blacklisted Address</h2>
       <Input
         value={value}
         allowClear

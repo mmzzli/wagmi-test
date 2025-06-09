@@ -1,5 +1,5 @@
 import { List, Typography } from "antd";
-
+import "./style.css";
 const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
   return (
     <List
@@ -14,7 +14,10 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
             }}
           >
             <div style={{ width: "100%" }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div
+                className={"list-style"}
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
                 <Typography.Text>{item.address}</Typography.Text>
                 {/*{item.blacked 为 true 是显示拉黑，但如果 item.black_hash 没有值则为外部拉黑}*/}
                 <div>
@@ -24,19 +27,19 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                         target="_blank"
                         href={`https://bscscan.com/tx/${item.black_hash}`}
                       >
-                        {`https://bscscan.com/tx/${item.black_hash}`}
+                        {`${item.black_hash}`}
                       </a>
                     ) : (
-                      <span>外部拉黑</span>
+                      <span>Externally Blacklisted</span>
                     )
                   ) : item.outBlacked ? (
-                    <span>外部拉黑</span>
+                    <span>Externally Blacklisted</span>
                   ) : (
-                    <span>未拉黑</span>
+                    <span>Not Blacklisted</span>
                   )}
                 </div>
               </div>
-              <h4>扫块信息</h4>
+              <h4>Block Scanning Information</h4>
               <div
                 style={{
                   display: "flex",
@@ -82,7 +85,11 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                 }}
               >
                 <span>type</span>{" "}
-                <span>{item.type === 1 ? "普通交易" : "合约交易"}</span>
+                <span>
+                  {item.type === 1
+                    ? "Normal Transaction"
+                    : "Contract Transaction"}
+                </span>
               </div>
             </div>
           </List.Item>

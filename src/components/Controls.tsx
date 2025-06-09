@@ -10,28 +10,28 @@ import { bsc } from "../chains/bsc.ts";
 const map: any[] = [
   {
     key: "V3black",
-    label: "V3 拉黑",
+    label: "V3 Set BlackList",
     contract: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
     abi: contractV3.abi,
     params: true,
   },
   {
     key: "V3white",
-    label: "V3 解除拉黑",
+    label: "V3 Unblock",
     contract: "0xf465B506B0535eFAfb2136347EBDf83463b9ad99",
     abi: contractV3.abi,
     params: false,
   },
   {
     key: "V2black",
-    label: "V2 拉黑",
+    label: "V2 Set BlackList",
     contract: "0xc521983923625E14D0a45a7cDeA9C384fA1DEF13",
     abi: contractV2.abi,
     params: true,
   },
   {
     key: "V2white",
-    label: "V2 解除拉黑",
+    label: "V2 Unblock",
     contract: "0xc521983923625E14D0a45a7cDeA9C384fA1DEF13",
     abi: contractV2.abi,
     params: false,
@@ -221,7 +221,7 @@ function Controls() {
 
                     {item.state == 3 && (
                       <Button onClick={() => handlerRetry(item.address)}>
-                        重试
+                        Retry
                       </Button>
                     )}
                   </List.Item>

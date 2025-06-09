@@ -6,11 +6,11 @@ import HomeSearch from "./HomeSearch.tsx";
 const tabs: any[] = [
   {
     key: "list",
-    label: "拉黑列表",
+    label: "Blacklist",
   },
   {
     key: "search",
-    label: "搜索拉黑地址",
+    label: "Search Blacklisted Address",
   },
 ];
 const Home = () => {

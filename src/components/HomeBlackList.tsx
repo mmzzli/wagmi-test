@@ -33,8 +33,8 @@ const HomeBlackList = () => {
   }, []);
   return (
     <>
-      <div>仅展示最新 30条内容</div>
-      <span>当前块高{blockNumber}</span>
+      <div>Only the latest 30 entries are displayed</div>
+      <span>Current Block Height{blockNumber}</span>
       <HomeCommonList list={list}></HomeCommonList>
     </>
   );

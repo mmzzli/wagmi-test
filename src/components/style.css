@@ -1,0 +1,6 @@
+@media screen and (max-width: 768px) {
+    .list-style{
+        flex-direction: column;
+        overflow: hidden;
+    }
+}

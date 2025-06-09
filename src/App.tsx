@@ -7,15 +7,15 @@ import Home from "./components/Home.tsx";
 const tabs: any[] = [
   {
     key: "home",
-    label: "拉黑程序",
+    label: "Blacklist Management",
   },
   {
     key: "controls",
-    label: "拉黑/解除拉黑",
+    label: "Blacklist / Remove from Blacklist",
   },
   {
     key: "view",
-    label: "查看拉黑状态",
+    label: "Check Blacklist Status",
   },
 ];
 
