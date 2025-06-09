@@ -49,7 +49,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                   overflow: "hidden",
                 }}
               >
-                <span>hash</span> <span>{item.hash}</span>
+                <span>hash:</span> <span>{item.hash}</span>
               </div>
               <div
                 className={"list-style"}
@@ -59,7 +59,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                   width: "100%",
                 }}
               >
-                <span>from</span> <span>{item.from_address}</span>
+                <span>from:</span> <span>{item.from_address}</span>
               </div>
               <div
                 className={"list-style"}
@@ -69,7 +69,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                   width: "100%",
                 }}
               >
-                <span>to</span> <span>{item.to_address}</span>
+                <span>to:</span> <span>{item.to_address}</span>
               </div>
               <div
                 style={{
