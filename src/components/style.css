@@ -2,5 +2,6 @@
     .list-style{
         flex-direction: column;
         overflow: hidden;
+        margin-bottom: 3px;
     }
 }
