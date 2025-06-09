@@ -45,6 +45,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   width: "100%",
+                  overflow: "hidden",
                 }}
               >
                 <span>hash</span> <span>{item.hash}</span>
