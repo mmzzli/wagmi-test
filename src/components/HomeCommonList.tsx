@@ -41,6 +41,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
               </div>
               <h4>Block Scanning Information</h4>
               <div
+                className={"list-style"}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -51,6 +52,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                 <span>hash</span> <span>{item.hash}</span>
               </div>
               <div
+                className={"list-style"}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -60,6 +62,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                 <span>from</span> <span>{item.from_address}</span>
               </div>
               <div
+                className={"list-style"}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -69,6 +72,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
                 <span>to</span> <span>{item.to_address}</span>
               </div>
               <div
+                className={"list-style"}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -79,6 +83,7 @@ const HomeCommonList: React.FC<{ list: any[] }> = ({ list }) => {
               </div>
 
               <div
+                className={"list-style"}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
